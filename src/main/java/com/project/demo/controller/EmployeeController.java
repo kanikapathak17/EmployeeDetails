@@ -9,7 +9,12 @@ import javax.validation.Valid;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,8 +41,12 @@ import com.project.demo.service.EmployeeService;
 
 
 
+
+
+
 @RestController
 @RequestMapping("/employee")
+@CacheConfig(cacheNames = "employee")
 @Validated
 @CrossOrigin
 public class EmployeeController {
@@ -45,7 +54,7 @@ public class EmployeeController {
 	@Autowired
 	EmployeeService employeeservice;
 	
-	//private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
+	
 	
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(EmployeeController.class);
 	
@@ -66,9 +75,9 @@ public class EmployeeController {
 			
 		}
 		 catch(Exception e){
-		// log.error("An exception occurred",e);
+		 log.info("An exception occurred",e);
 			//System.out.println("An error occurred" + e);
-		 log.info("kanika pathak");
+		 
 			 throw e;
 			 
 		 }
@@ -87,7 +96,7 @@ public class EmployeeController {
 		 return "added";
 		}	
 		catch(Exception e) {
-			 System.out.println("An error occurred" + e);
+			 log.error("An error occurred" + e);
 			
 			throw e;
 		}
@@ -104,7 +113,7 @@ public class EmployeeController {
 		 return "deleted row with id = "+ id;
 		}
 		catch(Exception e) {
-			 System.out.println("An error occurred" + e);
+			 log.error("An error occurred" + e);
 			throw e;
 		}
 	}
@@ -118,7 +127,7 @@ public class EmployeeController {
 		 return employee;
 		}
 		catch(Exception e) {
-			System.out.println("An error occurred" + e);
+			log.error("An error occurred" + e);
 			throw e;
 		}
 	}
@@ -131,25 +140,40 @@ public class EmployeeController {
 		
 		}
 		catch(Exception e) {
-			 System.out.println("An error occurred" + e);
+			 log.error("An error occurred" + e);
 			throw e;
 		}
 		
 	}
 	
-	@GetMapping(value="/list/{page}")
-	public Page<Employee> getAllEmployee(@PathVariable("page") Integer page)
+	@GetMapping(value="/{page}/Item/{Items}")
+	public Page<Employee> getAllEmployee(@PathVariable("page") Integer page,@PathVariable("Items")Integer Items)
 	{
-		return employeeservice.getAllEmployee(page);
+		try {
+		return employeeservice.getAllEmployee(page,Items);
+	}
+		catch(Exception e) {
+			log.error("An error occurred" +e);
+			throw e;
+		}
 	}
 	
 	@PostMapping(value="/search")
-	public List<Employee> search(@RequestBody SearchParameters search )
+	public List<Employee> search(@Valid @RequestBody SearchParameters search )
 	{
+		try {
 		return employeeservice.search(search);
+	}
+		catch(Exception e) {
+			log.error("An error occured" +e);
+			throw e;
+		}
+	
 	}
 	
 	
 	
 
+	
 }
+

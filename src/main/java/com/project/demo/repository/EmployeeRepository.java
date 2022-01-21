@@ -11,15 +11,19 @@ import com.project.demo.entity.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
-
-	
-
-	
-	
-	
-	
 	
 	
 	
 
 }
+	
+
+	
+	
+	
+	
+	
+	
+	
+
+

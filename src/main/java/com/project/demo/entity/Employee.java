@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,11 +28,13 @@ import javax.persistence.Table;
 
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.demo.annotations.Name;
 import com.project.demo.annotations.Phone;
+
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -46,13 +49,14 @@ import lombok.Setter;
 
 
 @Entity
+@Cacheable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter(value=AccessLevel.PUBLIC)
 @Setter(value=AccessLevel.PUBLIC)
 @Table(name="Employee")
-public class Employee {
+public class Employee implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -81,20 +85,14 @@ public class Employee {
 	
 	@NotEmpty(message = "Please enter salary")
 	@NotNull(message="Salary field is empty")
+	@Pattern(regexp="^[1-9]\\d*(\\.\\d+)?$", message="Please Enter correctly")
 	private String salary;
 	
 	
 	
 	@JsonBackReference
 	@ManyToOne
-//    @JoinTable(
-//            name = "EmployeeDesignationTable",
-//            joinColumns = @JoinColumn(name = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "desigination_id")
-//            
-//            )
-	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Designation designation;
+   private Designation designation;
 	
 	
 	

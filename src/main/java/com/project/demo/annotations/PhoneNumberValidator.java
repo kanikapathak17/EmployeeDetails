@@ -12,8 +12,8 @@ public class PhoneNumberValidator implements ConstraintValidator<Phone, String> 
 
   
    @Override
-   public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
-       if (str.matches("[0-9]+")) return true;
+   public boolean isValid(String str1, ConstraintValidatorContext constraintValidatorContext) {
+       if (str1.matches("[0-9]+")) return true;
        return false;
    }
 
